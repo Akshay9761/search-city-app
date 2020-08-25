@@ -1,0 +1,46 @@
+.btn-remove {
+  margin-right: 5px;
+}
+
+.all-city-table {
+  box-shadow: 0 4px 10px 0 rgba(0,0,0,.2), 0 4px 20px 0 rgb(242, 242, 242,.19);
+}
+
+.invalid-feedback {
+  width: 100%;
+  margin-top: .25rem;
+  font-size: 80%;
+  color: #dc3545;
+}
+
+.city-container {
+  background-color: #343A3F;
+}
+
+.new-city-btn {
+  padding-top: 10px;
+}
+
+@media screen and (max-width: 1084px) {
+  .btn-remove {
+    margin-right: 0;
+  }
+
+  .btn-shortlist {
+    margin-top: 5px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .search-field {
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .pagination-mod {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+  }
+}
