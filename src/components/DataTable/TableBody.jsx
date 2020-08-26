@@ -12,15 +12,6 @@ function TableBody({ citiesData,
     return (
       <>
         {
-          removeActionVisible &&
-          <Button
-            onClick={() => handleRemoveCity(id)}
-            className="btn btn-remove" variant="danger"
-          >
-            Remove
-          </Button>
-        }
-        {
           shortListActionVisible &&
           <Button
             className="btn btn-shortlist"
@@ -29,7 +20,19 @@ function TableBody({ citiesData,
             style={shortlist ? { cursor: 'not-allowed' } : null}
             onClick={() => handleShortListCity(id)}
           >
-            ShortList
+            Shortlist
+          </Button>
+        }
+        {
+          removeActionVisible &&
+          <Button
+            onClick={() => handleRemoveCity(id)}
+            className="btn btn-remove" variant="danger"
+          >
+            {
+              handleShortListCity ?
+              'Delete' : 'Remove'
+            }
           </Button>
         }
       </>

@@ -1,5 +1,5 @@
-.btn-remove {
-  margin-right: 5px;
+.btn-shortlist {
+  margin-right: 10px;
 }
 
 .all-city-table {
@@ -23,11 +23,11 @@
 
 @media screen and (max-width: 1084px) {
   .btn-remove {
-    margin-right: 0;
-  }
-
-  .btn-shortlist {
     margin-top: 5px;
+  }
+  
+  .btn-shortlist {
+    margin-right: 0;
   }
 }
 
