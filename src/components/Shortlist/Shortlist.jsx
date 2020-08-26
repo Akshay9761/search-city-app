@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
-import { TableHeader } from '../DataTable'
+import { TableHeader, TableBody } from '../DataTable'
 import { Table } from 'react-bootstrap';
-import Button from 'react-bootstrap/Button'
 import { connect } from 'react-redux';
 import Spinner from 'react-bootstrap/Spinner';
 import { headers } from '../../common/Js/constant';
@@ -16,7 +15,7 @@ function Shortlist({
 
   const handleRemoveShortListedCity = debounce((cityId) => {
     removeShortListCity(cityId);
-  }, 1000)
+  }, 500)
 
   const citiesData = useMemo(() => shortlistedCities, [shortlistedCities]);
 
@@ -31,23 +30,12 @@ function Shortlist({
                 <div className="col mb-3">
                   <Table bordered responsive="sm" hover variant="dark">
                     <TableHeader headers={headers} />
-                    <tbody>
-                      {citiesData.map(city => (
-                        <tr key={city.id}>
-                          <td>{city.State}</td>
-                          <td>{city.District}</td>
-                          <td>{city.City}</td>
-                          <td>
-                            <Button
-                              onClick={() => handleRemoveShortListedCity(city.id)}
-                              className="btn btn-remove" variant="danger"
-                            >
-                              Remove
-                            </Button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
+                    <TableBody 
+                      citiesData={citiesData} 
+                      removeActionVisible={true} 
+                      shortListActionVisible={false}
+                      handleRemoveCity={handleRemoveShortListedCity}
+                    />
                   </Table>
                 </div>
               </div>

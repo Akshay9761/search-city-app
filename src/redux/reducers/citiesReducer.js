@@ -15,6 +15,20 @@ const getStateDistrictObj = (allCity) => {
   return stateDistrictObj;
 }
 
+const getTotalCityPerPage = (currentPage, itemsPerPage = 1000, allCity) => {
+  return allCity.slice((currentPage - 1) * itemsPerPage,
+    (currentPage - 1) * itemsPerPage + itemsPerPage);
+}
+
+const getSearchedCities = (allCity, searchText) => {
+  return allCity.filter(
+    city =>
+      city.City.toLowerCase().includes(searchText.toLowerCase()) ||
+      city.District.toLowerCase().includes(searchText.toLowerCase()) ||
+      city.State.toLowerCase().includes(searchText.toLowerCase())
+  );
+} 
+
 export default function citiesReducer(state = initialState, action) {
   switch (action.type) {
 
@@ -25,9 +39,8 @@ export default function citiesReducer(state = initialState, action) {
           ...city
         }
       });
-      let computedCities = allCity.slice(
-        (state.currentPage - 1) * state.ITEMS_PER_PAGE,
-        (state.currentPage - 1) * state.ITEMS_PER_PAGE + state.ITEMS_PER_PAGE);
+      let computedCities = getTotalCityPerPage(state.currentPage, 
+        state.ITEMS_PER_PAGE, allCity);
 
       let stateDistrict = getStateDistrictObj(allCity);
 
@@ -37,24 +50,20 @@ export default function citiesReducer(state = initialState, action) {
       };
 
     case types.SET_CURRENT_PAGE:
-      let curPaginationCities = state.allCities.slice(
-        (action.currentPage - 1) * state.ITEMS_PER_PAGE,
-        (action.currentPage - 1) * state.ITEMS_PER_PAGE + state.ITEMS_PER_PAGE);
+      let curPaginationCities = getTotalCityPerPage(action.currentPage, 
+        state.ITEMS_PER_PAGE, state.allCities);
+      
       return { ...state, currentPage: action.currentPage, totalCities: curPaginationCities };
 
     case types.SEARCH_CITIES_SUCCESS:
       if (action.searchText) {
-        let citiesComputed = state.allCities.filter(
-          city =>
-            city.City.toLowerCase().includes(action.searchText.toLowerCase()) ||
-            city.District.toLowerCase().includes(action.searchText.toLowerCase()) ||
-            city.State.toLowerCase().includes(action.searchText.toLowerCase())
-        );
+        let citiesComputed = getSearchedCities(state.allCities, action.searchText)
+
         return { ...state, currentPage: 1, totalCities: citiesComputed, totalItems: citiesComputed.length, search: action.searchText };
       } else {
-        let citiesComputed = state.allCities.slice(
-          (state.currentPage - 1) * state.ITEMS_PER_PAGE,
-          (state.currentPage - 1) * state.ITEMS_PER_PAGE + state.ITEMS_PER_PAGE);
+        let citiesComputed = getTotalCityPerPage(state.currentPage,
+          state.ITEMS_PER_PAGE, state.allCities);
+
         return { ...state, allCities: state.allCities, totalItems: state.allCities.length, totalCities: citiesComputed, search: '' };
       }
 
@@ -66,16 +75,11 @@ export default function citiesReducer(state = initialState, action) {
 
       let citiesComputedAfterRemove;
       if (state.search) {
-        citiesComputedAfterRemove = allCitiesRemove.filter(
-          city =>
-            city.City.toLowerCase().includes(state.search.toLowerCase()) ||
-            city.District.toLowerCase().includes(state.search.toLowerCase()) ||
-            city.State.toLowerCase().includes(state.search.toLowerCase())
-        );
+        citiesComputedAfterRemove = getSearchedCities(allCitiesRemove, state.search)
+        
       } else {
-        citiesComputedAfterRemove = allCitiesRemove.slice(
-          (state.currentPage - 1) * state.ITEMS_PER_PAGE,
-          (state.currentPage - 1) * state.ITEMS_PER_PAGE + state.ITEMS_PER_PAGE);
+        citiesComputedAfterRemove = getTotalCityPerPage(state.currentPage,
+          state.ITEMS_PER_PAGE, allCitiesRemove);
       }
 
       return {
@@ -96,16 +100,10 @@ export default function citiesReducer(state = initialState, action) {
 
       let totalShortListedCities
       if (state.search) {
-        totalShortListedCities = allCitiesShortlist.filter(
-          city =>
-            city.City.toLowerCase().includes(state.search.toLowerCase()) ||
-            city.District.toLowerCase().includes(state.search.toLowerCase()) ||
-            city.State.toLowerCase().includes(state.search.toLowerCase())
-        );
+        totalShortListedCities = getSearchedCities(allCitiesShortlist, state.search);
       } else {
-        totalShortListedCities = allCitiesShortlist.slice(
-          (state.currentPage - 1) * state.ITEMS_PER_PAGE,
-          (state.currentPage - 1) * state.ITEMS_PER_PAGE + state.ITEMS_PER_PAGE);
+        totalShortListedCities = getTotalCityPerPage(state.currentPage,
+          state.ITEMS_PER_PAGE, allCitiesShortlist);
       }
 
       return {
@@ -125,9 +123,8 @@ export default function citiesReducer(state = initialState, action) {
 
       let shortlistedCitiesRemove = state.shortlistedCities.filter(city => city.id !== action.id);
 
-      let removeTotalShortListedCities = allCitiesShorltistRemove.slice(
-        (state.currentPage - 1) * state.ITEMS_PER_PAGE,
-        (state.currentPage - 1) * state.ITEMS_PER_PAGE + state.ITEMS_PER_PAGE);
+      let removeTotalShortListedCities = getTotalCityPerPage(state.currentPage,
+        state.ITEMS_PER_PAGE, allCitiesShorltistRemove);
 
       return {
         ...state, allCities: allCitiesShorltistRemove, totalCities: removeTotalShortListedCities,
@@ -142,9 +139,8 @@ export default function citiesReducer(state = initialState, action) {
     case types.ADD_NEW_CITY_SUCCESS:
       let newAllCities = [action.payload, ...state.allCities];
 
-      let newTotalShortListedCities = newAllCities.slice(
-        (state.currentPage - 1) * state.ITEMS_PER_PAGE,
-        (state.currentPage - 1) * state.ITEMS_PER_PAGE + state.ITEMS_PER_PAGE);
+      let newTotalShortListedCities = getTotalCityPerPage(state.currentPage,
+        state.ITEMS_PER_PAGE, newAllCities);
 
       return {
         ...state, allCities: newAllCities, totalCities: newTotalShortListedCities,
